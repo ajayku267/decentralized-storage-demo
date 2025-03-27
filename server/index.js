@@ -1,10 +1,11 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const mongoose = require('mongoose');
-const path = require('path');
-const logger = require('./utils/logger');
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import mongoose from 'mongoose';
+import path from 'path';
+import logger from './utils/logger';
+import { getPort, getCorsOptions } from './config/ports.js';
 
 // Import routes
 const fileRoutes = require('./routes/file');
@@ -14,9 +15,10 @@ const healthRoutes = require('./routes/health');
 
 // Initialize Express
 const app = express();
+const port = getPort();
 
 // Middleware
-app.use(cors());
+app.use(cors(getCorsOptions()));
 app.use(express.json());
 app.use(morgan('combined', { stream: logger.stream }));
 
@@ -72,15 +74,11 @@ if (process.env.NODE_ENV !== 'production') {
   logger.debug("Environment variables:", process.env);
 }
 
-// Set the port
-const PORT = process.env.PORT || 5001;
-logger.info(`Server configured to run on port ${PORT}`);
-
 // Start the server
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
-  logger.info(`API accessible at http://localhost:${PORT}/api`);
-  logger.info(`Health endpoint: http://localhost:${PORT}/api/health`);
+app.listen(port, () => {
+  logger.info(`Server running on port ${port}`);
+  logger.info(`API accessible at http://localhost:${port}/api`);
+  logger.info(`Health endpoint: http://localhost:${port}/api/health`);
 });
 
 module.exports = app; 

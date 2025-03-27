@@ -1,70 +1,41 @@
 {
   "name": "decentralized-storage",
   "version": "1.0.0",
-  "description": "A decentralized cloud storage system similar to Filecoin using IPFS and Ethereum",
-  "main": "server/index.js",
-  "scripts": {
-    "start": "node server/index.js",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "nodemon server/index.js",
-    "dev:client": "cd client && npm start",
-    "build": "cd client && npm run build",
-    "build:all": "npm install && cd client && npm install && npm run build",
-    "prod": "NODE_ENV=production node server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "client:demo": "cd client && cross-env REACT_APP_DEMO_MODE=true npm start",
-    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
-    "deploy:testnet": "hardhat run scripts/deploy.js --network sepolia",
-    "compile": "hardhat compile",
-    "clean": "hardhat clean",
-    "node": "hardhat node",
-    "coverage": "hardhat coverage",
-    "setup": "npm install && cd client && npm install && cd .. && npm run setup:env",
-    "setup:env": "node -e \"if (!require('fs').existsSync('.env')) { require('fs').copyFileSync('.env.example', '.env'); console.log('.env file created!'); } else { console.log('.env file already exists'); }\""
-  },
-  "keywords": [
-    "blockchain",
-    "ipfs",
-    "ethereum",
-    "decentralized",
-    "storage",
-    "filecoin"
+  "private": true,
+  "workspaces": [
+    "client",
+    "mobile",
+    "server",
+    "contracts"
   ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "aws-sdk": "^2.1502.0",
-    "axios": "^1.6.2",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.18.2",
-    "express-validator": "^7.0.1",
-    "form-data": "^4.0.0",
-    "ipfs-http-client": "^56.0.3",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.2",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "winston": "^3.17.0"
+  "scripts": {
+    "start": "concurrently \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "npm run start --workspace=client",
+    "start:mobile": "npm run start --workspace=mobile",
+    "start:server": "npm run start --workspace=server",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "build": "npm run build --workspaces",
+    "deploy:contracts": "npm run deploy --workspace=contracts",
+    "clean": "rimraf \"**/node_modules\" \"**/dist\" \"**/build\" \"**/.cache\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
-    "@nomicfoundation/hardhat-ethers": "^3.0.4",
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@nomicfoundation/hardhat-verify": "^2.0.1",
-    "@typechain/ethers-v6": "^0.5.1",
-    "@typechain/hardhat": "^9.1.0",
-    "chai": "^4.3.10",
     "concurrently": "^8.2.2",
-    "ethers": "^6.9.0",
-    "hardhat": "^2.19.2",
-    "hardhat-gas-reporter": "^1.0.9",
-    "nodemon": "^3.0.2",
-    "solidity-coverage": "^0.8.5",
-    "typechain": "^8.3.2"
+    "prettier": "2.8.8",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "rimraf": "^5.0.5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }
