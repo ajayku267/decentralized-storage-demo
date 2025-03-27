@@ -13,7 +13,6 @@ services:
           name: decentralized-storage-api
           type: web
           envVarKey: RENDER_EXTERNAL_URL
-        sync: false
     routes:
       - type: rewrite
         source: /*
