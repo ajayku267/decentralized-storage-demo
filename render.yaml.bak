@@ -1,0 +1,42 @@
+services:
+  # Frontend service (React client)
+  - type: web
+    name: decentralized-storage-client
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: ./client/build
+    envVars:
+      - key: REACT_APP_ENABLE_DEMO_MODE
+        value: "true"
+      - key: REACT_APP_API_URL
+        fromService:
+          name: decentralized-storage-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Backend service (Node.js API)
+  - type: web
+    name: decentralized-storage-api
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: NODE_ENV
+        value: "production"
+      - key: ENABLE_DEMO_MODE
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: ADMIN_WALLET
+        sync: false
+      - key: ADMIN_PRIVATE_KEY
+        sync: false 
