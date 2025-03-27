@@ -1,0 +1,55 @@
+# Dependency directories
+node_modules
+client/node_modules
+
+# Build outputs
+client/build
+dist
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+client/.env
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
+
+# Log files
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.DS_Store
+.git
+.gitignore
+*.md
+!README.md
+!DEPLOYMENT.md
+
+# Server uploads - will be mounted as volume
+server/uploads/*
+
+# Docker files (to prevent recursive copying)
+Dockerfile
+docker-compose.yml
+.dockerignore 

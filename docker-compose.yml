@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    volumes:
+      - app_logs:/app/server/logs
+      - app_uploads:/app/server/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5001/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=decentralized-storage
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/decentralized-storage --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  mongodb_data:
+    driver: local
+  app_logs:
+    driver: local
+  app_uploads:
+    driver: local 
